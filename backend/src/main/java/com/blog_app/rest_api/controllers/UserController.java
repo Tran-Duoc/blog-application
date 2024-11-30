@@ -13,7 +13,6 @@ public class UserController {
     @GetMapping("/all")
     public String getUser(){
             return "hello world";
-
     }
 
 }
