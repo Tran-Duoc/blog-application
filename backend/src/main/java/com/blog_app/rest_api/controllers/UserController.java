@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("${api.version.prefix}/user")
 public class UserController {
 
     @GetMapping("/all")
@@ -16,3 +16,4 @@ public class UserController {
     }
 
 }
+
