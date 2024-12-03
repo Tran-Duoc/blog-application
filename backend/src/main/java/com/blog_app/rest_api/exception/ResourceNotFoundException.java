@@ -1,4 +1,4 @@
-package com.blog_app.rest_api.dto.response;
+package com.blog_app.rest_api.exception;
 
 import java.io.Serial;
 

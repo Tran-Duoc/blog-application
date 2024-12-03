@@ -48,13 +48,9 @@ public class PostEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity author;
 
-    @ManyToMany
-    @JoinTable(
-            name = "post_categories",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<CategoryEntity> categories;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
 
     @ManyToMany
     @JoinTable(

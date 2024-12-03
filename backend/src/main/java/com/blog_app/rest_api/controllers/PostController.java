@@ -1,9 +1,12 @@
 package com.blog_app.rest_api.controllers;
 
 
-import com.blog_app.rest_api.dto.response.ResponseHandler;
+import com.blog_app.rest_api.dto.request.PostRequestDTO;
+import com.blog_app.rest_api.dto.response.ResponseData;
+import com.blog_app.rest_api.dto.response.ResponseError;
 import com.blog_app.rest_api.entity.PostEntity;
 import com.blog_app.rest_api.services.impl.IPostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
 @RestController
@@ -22,26 +24,29 @@ public class PostController {
     @Autowired
     IPostService postService;
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllPosts(
+    public ResponseData<List<PostEntity>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) {
-
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("createdAt").descending());
-        Page<PostEntity> posts = postService.getAllPosts(pageable);
-
-        return  ResponseHandler.baseResponse(HttpStatus.OK, "Get all posts successfully", posts.getContent());
-
+        try {
+            Pageable pageable = PageRequest.of(page, limit, Sort.by("createdAt").descending());
+            Page<PostEntity> posts = postService.getAllPosts(pageable);
+            return new ResponseData<>(HttpStatus.OK.value(), "get posts successfully", posts.getContent());
+        } catch (Exception e){
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "get posts successfully");
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPostById(@PathVariable Long id) {
-        PostEntity post = postService.getPostById(id);
-        if (post == null) {
-           return  ResponseHandler.errorResponse(HttpStatus.NOT_FOUND, "Could not find post ");
-        }
+    public ResponseData<PostEntity> getPostById(@Valid @PathVariable Long id) {
+        try {
+            PostEntity post = postService.getPostById(id);
+            return   new ResponseData<>(HttpStatus.OK.value(), "Get post successfully",post );
 
-        return  ResponseHandler.baseResponse(HttpStatus.OK, "Get post successfully",post );
+        } catch (Exception e){
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Could not get post");
+
+        }
     }
 
     @GetMapping("/author/{id}")
@@ -57,7 +62,8 @@ public class PostController {
 
 
     @PostMapping("/new-post")
-    public  ResponseEntity<String> createPost(@RequestBody PostEntity post){
+    public  ResponseEntity<String> createPost(@Valid @RequestBody PostRequestDTO post){
+        System.out.println(post);
         return ResponseEntity.ok("created post");
     }
 

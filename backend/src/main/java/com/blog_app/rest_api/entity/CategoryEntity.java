@@ -26,6 +26,6 @@ public class CategoryEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany(mappedBy = "categories")
+    @OneToMany(mappedBy = "category")
     private List<PostEntity> posts;
 }

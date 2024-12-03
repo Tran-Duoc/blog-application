@@ -1,6 +1,6 @@
 package com.blog_app.rest_api.services.impl;
 
-import com.blog_app.rest_api.dto.response.ResourceNotFoundException;
+import com.blog_app.rest_api.exception.ResourceNotFoundException;
 import com.blog_app.rest_api.entity.PostEntity;
 import com.blog_app.rest_api.repository.impl.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ public class PostService  implements IPostService{
 
     @Override
     public PostEntity getPostById(Long id) {
-        return repository.findById(id).orElse(null);
-
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No such post"));
     }
+
 
     @Override
     public String getPostsByAuthor(Long id) {
